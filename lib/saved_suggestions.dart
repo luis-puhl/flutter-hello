@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:english_words/english_words.dart';
 
 class SavedSuggestions extends StatelessWidget {
   final TextStyle bigFont;
-  final Set<WordPair> saved;
+  final Set<String> saved;
   SavedSuggestions({Key key, @required this.bigFont, @required this.saved}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final Iterable<ListTile> tiles = saved.map(
-      (WordPair pair) {
+      (String pair) {
         return ListTile(
           title: Text(
-            pair.asPascalCase,
+            pair,
             style: bigFont,
           ),
         );

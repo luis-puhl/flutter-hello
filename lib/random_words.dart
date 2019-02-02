@@ -1,11 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
+
 import 'package:startup_namer/saved_suggestions.dart';
+import 'package:startup_namer/json_placeholder_api.dart' as jpa;
 
 class RandomWordsState extends State<RandomWords> {
-  final List<WordPair> _suggestions = <WordPair>[];
+  final Set<String> _suggestions = Set<String>();
   final TextStyle _bigFont = const TextStyle(fontSize: 18.0);
-  final Set<WordPair> _saved = Set<WordPair>();
+  final Set<String> _saved = Set<String>();
+  Future<jpa.Post> post;
+  Future<List<jpa.Todo>> todos;
+
+  @override
+  void initState() {
+    super.initState();
+    print('initState');
+    post = jpa.JsonPlaceholderApi.fetchPost();
+    todos = jpa.JsonPlaceholderApi.indexTodos();
+  }
+
+  Widget _buildTodosList() {
+    return FutureBuilder<List<jpa.Todo>>(
+      future: todos,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          _suggestions.addAll(snapshot.data.map((todo) => todo.title));
+          return _buildSuggestions();
+        } else if (snapshot.hasError) {
+          return Center(child: Text("${snapshot.error}"));
+        }
+
+        // By default, show a loading spinner
+        return Center(child: CircularProgressIndicator());
+      },
+    );
+  }
+
+  void _moreSuggestions() {
+    _suggestions.addAll(generateWordPairs().take(10).map((pair) => pair.asPascalCase));
+  }
 
   Widget _buildSuggestions(){
     return ListView.builder(
@@ -15,18 +48,19 @@ class RandomWordsState extends State<RandomWords> {
 
         final index = i ~/ 2;
         if (index >= _suggestions.length) {
-          _suggestions.addAll(generateWordPairs().take(10));
+          _moreSuggestions();
         }
-        return _buildRow(_suggestions[index]);
+        return _buildRow(_suggestions.elementAt(index), index);
       },
     );
   }
 
-  Widget _buildRow(WordPair pair) {
+  Widget _buildRow(String pair, num index) {
     final bool alreadySaved = _saved.contains(pair);
     return ListTile(
+      leading: Text('#' + index.toString(), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),),
       title: Text(
-        pair.asPascalCase,
+        pair,
         style: _bigFont,
       ),
       trailing: Icon(
@@ -63,7 +97,7 @@ class RandomWordsState extends State<RandomWords> {
           )
         ],
       ),
-      body: _buildSuggestions(),
+      body: _buildTodosList(),
     );
   }
 }
