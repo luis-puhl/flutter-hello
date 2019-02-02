@@ -66,10 +66,8 @@ class JsonPlaceholderApi {
     if (response.statusCode == 200) {
       List<dynamic> todosJson = json.decode(response.body);
       List<Todo> todos = [];
-      for (var todoJson in todosJson) {
-        todos.add(Todo.fromJson(todoJson));
-      }
-      // List<Todo> todos = todosJson.map((jsonTodo) => Todo.fromJson(jsonTodo)).toList();
+      todos.addAll(todosJson.map((jsonTodo) => Todo.fromJson(jsonTodo)));
+      todos.shuffle();
       return todos;
     } else {
       throw Exception('Failed to index todos');
