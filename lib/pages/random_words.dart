@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
 
-import 'package:startup_namer/saved_suggestions.dart';
-import './support/json_placeholder_api.dart' as jpa;
+import 'package:startup_namer/pages/saved_suggestions.dart';
+import 'package:startup_namer/support/json_placeholder_api.dart' as jpa;
 
 class RandomWordsState extends State<RandomWords> {
   Set<String> _suggestions = Set<String>();
@@ -93,11 +93,12 @@ class RandomWordsState extends State<RandomWords> {
           IconButton(
             icon: const Icon(Icons.list),
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (BuildContext context) => SavedSuggestions(bigFont: const TextStyle(fontSize: 18.0), saved: _saved,)
-                )
-              );
+              Navigator.pushNamed(context, SavedSuggestions.routeName);
+              // Navigator.of(context).push(
+              //   MaterialPageRoute(
+              //     builder: (BuildContext context) => SavedSuggestions(saved: _saved,)
+              //   )
+              // );
             },
           )
         ],

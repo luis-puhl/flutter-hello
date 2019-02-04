@@ -1,6 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import './time_it.dart';
+import 'package:startup_namer/support/time_it.dart';
 
 class Post {
   final int userId;

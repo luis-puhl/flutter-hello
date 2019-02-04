@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 class SavedSuggestions extends StatelessWidget {
-  final TextStyle bigFont;
-  final Set<String> saved;
-  SavedSuggestions({Key key, @required this.bigFont, @required this.saved}) : super(key: key);
+  static const routeName = '/saved';
+  static const bigFont = TextStyle(fontSize: 18.0);
+  
+  final Set<String> saved = Set();
 
   @override
   Widget build(BuildContext context) {
