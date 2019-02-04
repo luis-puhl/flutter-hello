@@ -1,5 +1,8 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+// import 'dart:developer';
+import 'package:flutter/foundation.dart';
+import './time_it.dart';
 
 class Post {
   final int userId;
@@ -49,6 +52,14 @@ class Todo {
   }
 }
 
+List<Todo> parseTodos(http.Response response) {
+  List<dynamic> todosJson = json.decode(response.body);
+  List<Todo> todos = [];
+  todos.addAll(todosJson.map((jsonTodo) => Todo.fromJson(jsonTodo)));
+  todos.shuffle();
+  return todos;
+}
+
 class JsonPlaceholderApi {
   static Future<Todo> fetchTodo() async {
     final response = await http.get('https://jsonplaceholder.typicode.com/todos/1');
@@ -61,14 +72,12 @@ class JsonPlaceholderApi {
   }
 
   static Future<List<Todo>> indexTodos() async {
-    final response = await http.get('https://jsonplaceholder.typicode.com/todos');
+    final http.Response response = await http.get('https://jsonplaceholder.typicode.com/todos');
 
     if (response.statusCode == 200) {
-      List<dynamic> todosJson = json.decode(response.body);
-      List<Todo> todos = [];
-      todos.addAll(todosJson.map((jsonTodo) => Todo.fromJson(jsonTodo)));
-      todos.shuffle();
-      return todos;
+      // return parseTodos(response);
+      return timeIt(() => parseTodos(response), 'parse todos');
+      // return await computeIt(parseTodos, response);
     } else {
       throw Exception('Failed to index todos');
     }
