@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
 
 import 'package:startup_namer/saved_suggestions.dart';
-import 'package:startup_namer/json_placeholder_api.dart' as jpa;
+import './support/json_placeholder_api.dart' as jpa;
 
 class RandomWordsState extends State<RandomWords> {
   Set<String> _suggestions = Set<String>();
